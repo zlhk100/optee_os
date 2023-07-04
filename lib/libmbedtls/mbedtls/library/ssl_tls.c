@@ -24,7 +24,6 @@
  *  http://www.ietf.org/rfc/rfc2246.txt
  *  http://www.ietf.org/rfc/rfc4346.txt
  */
-
 #include "common.h"
 
 #if defined(MBEDTLS_SSL_TLS_C)
@@ -73,7 +72,6 @@ int mbedtls_ssl_conf_cid( mbedtls_ssl_config *conf,
     {
         return( MBEDTLS_ERR_SSL_BAD_INPUT_DATA );
     }
-
     conf->ignore_unexpected_cid = ignore_other_cid;
     conf->cid_len = len;
     return( 0 );

@@ -150,12 +150,6 @@ static TEE_Result ta_entry_send(uint32_t param_types, TEE_Param params[4])
 				TEE_PARAM_TYPE_VALUE_INOUT,
 				TEE_PARAM_TYPE_NONE);
 
-	if (param_types != req_param_types) {
-		EMSG("got param_types 0x%x, expected 0x%x",
-			param_types, req_param_types);
-		return TEE_ERROR_BAD_PARAMETERS;
-	}
-
 	if (params[0].memref.size != sizeof(*h))
 		return TEE_ERROR_BAD_PARAMETERS;
 

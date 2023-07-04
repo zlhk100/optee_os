@@ -6,7 +6,7 @@
 
 #include <ta_tls_client.h>
 
-#define TA_UUID (TA_TLS_CLIENT_UUID)
+#define TA_UUID TA_TLS_CLIENT_UUID
 
 #define TA_FLAGS		(TA_FLAG_SINGLE_INSTANCE | TA_FLAG_MULTI_SESSION)
 #define TA_STACK_SIZE		(32 * 1024)

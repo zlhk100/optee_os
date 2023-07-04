@@ -9,6 +9,9 @@ export CROSS_COMPILE
 CFG_TEE_TA_LOG_LEVEL ?= 2
 CPPFLAGS += -DCFG_TEE_TA_LOG_LEVEL=$(CFG_TEE_TA_LOG_LEVEL)
 
+CPPFLAGS += -DEXIT_SUCCESS=0
+CPPFLAGS += -DEXIT_FAILURE=1
+
 -include $(TA_DEV_KIT_DIR)/mk/ta_dev_kit.mk
 
 ifeq ($(wildcard $(TA_DEV_KIT_DIR)/mk/ta_dev_kit.mk), )

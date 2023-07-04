@@ -15,8 +15,14 @@
  *  limitations under the License.
  */
 
-#include "mbedtls/build_info.h"
-#include "mbedtls/platform.h"
+#include <string.h>
+#include <stdio.h>
+#include <stdlib.h>
+
+#include <trace.h>
+#include <mbedtls_clnt.h>
+
+// #include "mbedtls/build_info.h"
 
 #include "mbedtls/net_sockets.h"
 #include "mbedtls/debug.h"
@@ -24,30 +30,26 @@
 #include "mbedtls/entropy.h"
 #include "mbedtls/ctr_drbg.h"
 #include "mbedtls/error.h"
-#include "test/certs.h"
-
-#include <string.h>
+#include "mbedtls/platform.h"
+#include "mbedtls/certs.h"
+// #include "test/certs.h"
 
 #define SERVER_PORT "4433"
 #define SERVER_NAME "localhost"
 #define GET_REQUEST "GET / HTTP/1.0\r\n\r\n"
 
-#define DEBUG_LEVEL 1
+#define DEBUG_LEVEL 2
 
-static void my_debug(void *ctx, int level,
-                     const char *file, int line,
-                     const char *str)
+static void my_debug(void *ctx __unused, int level __unused,
+                     const char *file, int line, const char *str)
 {
-    ((void) level);
-
-    mbedtls_fprintf((FILE *) ctx, "%s:%04d: %s", file, line, str);
-    fflush((FILE *) ctx);
+    EMSG("%s:%04d: %s \n", file, line, str);
 }
 
 int mbedtls_connect_server(void)
 {
     int ret = 1, len;
-    int exit_code = MBEDTLS_EXIT_FAILURE;
+    // int exit_code = MBEDTLS_EXIT_FAILURE;
     mbedtls_net_context server_fd;
     uint32_t flags;
     unsigned char buf[1024];
@@ -180,7 +182,7 @@ int mbedtls_connect_server(void)
      * 3. Write the GET request
      */
     DMSG("  > Write to server:");
-    len = sprintf((char *) buf, GET_REQUEST);
+    len = snprintf((char *) buf, sizeof(GET_REQUEST), GET_REQUEST);
 
     while ((ret = mbedtls_ssl_write(&ssl, buf, len)) <= 0) {
         if (ret != MBEDTLS_ERR_SSL_WANT_READ && ret != MBEDTLS_ERR_SSL_WANT_WRITE) {
@@ -226,7 +228,7 @@ int mbedtls_connect_server(void)
 
     mbedtls_ssl_close_notify(&ssl);
 
-    exit_code = MBEDTLS_EXIT_SUCCESS;
+    // exit_code = MBEDTLS_EXIT_SUCCESS;
 
 exit:
     mbedtls_net_free(&server_fd);
@@ -239,7 +241,7 @@ exit:
     mbedtls_psa_crypto_free();
 #endif /* MBEDTLS_USE_PSA_CRYPTO */
 
-    mbedtls_exit(exit_code);
+    // mbedtls_exit(exit_code);
 
     return ret;
 }
