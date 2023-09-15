@@ -1006,6 +1006,9 @@ CFG_CORE_HAS_GENERIC_TIMER ?= y
 # Enable RTC API
 CFG_DRIVERS_RTC ?= n
 
+# Enable secure timer and acquire UTC timer from remote Timer Server
+CFG_SECURE_TIMER_PTA ?= y
+
 # Enable PTA for RTC access from non-secure world
 CFG_RTC_PTA ?= n
 

@@ -9,6 +9,7 @@ struct time_source {
 	const char *name;
 	uint32_t protection_level;
 	TEE_Result (*get_sys_time)(TEE_Time *time);
+	TEE_Result (*set_offset)(TEE_Time *time);
 };
 void time_source_init(void);
 
