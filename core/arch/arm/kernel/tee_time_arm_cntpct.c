@@ -14,13 +14,31 @@
 #include <trace.h>
 #include <utee_defines.h>
 
+static TEE_Time g_utc_offset;
+static uint64_t cntpct_cached;
 static TEE_Result arm_cntpct_get_sys_time(TEE_Time *time)
 {
-	uint64_t cntpct = barrier_read_counter_timer();
+	uint64_t cntpct = barrier_read_counter_timer() - cntpct_cached;
 	uint32_t cntfrq = read_cntfrq();
 
 	time->seconds = cntpct / cntfrq;
 	time->millis = (cntpct % cntfrq) / (cntfrq / TEE_TIME_MILLIS_BASE);
+
+	/* apply cached offset to real-time captured value then return
+	 * as system time
+	 */
+        TEE_TIME_ADD(g_utc_offset, time, time);
+
+	return TEE_SUCCESS;
+}
+
+static TEE_Result arm_cntpct_set_offset(TEE_Time *time)
+{
+	/* 1. Cache current ARM processor secure counter number
+	 * 2. Store passed in UTC timestamp.
+	 */
+	g_utc_offset  = *time;
+	cntpct_cached = barrier_read_counter_timer();
 
 	return TEE_SUCCESS;
 }
@@ -29,6 +47,7 @@ static const struct time_source arm_cntpct_time_source = {
 	.name = "arm cntpct",
 	.protection_level = 1000,
 	.get_sys_time = arm_cntpct_get_sys_time,
+	.set_offset   = arm_cntpct_set_offset, 
 };
 
 REGISTER_TIME_SOURCE(arm_cntpct_time_source)
