@@ -27,7 +27,7 @@ static TEE_Result arm_cntpct_get_sys_time(TEE_Time *time)
 	/* apply cached offset to real-time captured value then return
 	 * as system time
 	 */
-        TEE_TIME_ADD(g_utc_offset, time, time);
+        TEE_TIME_ADD(g_utc_offset, *time, *time);
 
 	return TEE_SUCCESS;
 }
